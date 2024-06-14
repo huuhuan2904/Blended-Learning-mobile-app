@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/doctor/quanlydangnhap/login_screen.dart';
 import 'package:flutter_application_1/users/fragments/overview_app_screen.dart';
 import 'package:flutter_application_1/users/model/user.dart';
-import 'package:flutter_application_1/users/quanlydangnhap/signup_screen.dart';
 import 'package:flutter_application_1/users/userPreferences/user_preferences.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -28,31 +26,31 @@ class _LoginScreenState extends State<LoginScreen> {
       var res = await http.post(
         Uri.parse(API.login),
         body: {
-          "Useraccount": accountController.text.trim(),
-          "Userpassword": passwordController.text.trim(),
+          "Email": accountController.text.trim(),
+          "Password": passwordController.text.trim(),
         },
       );
-
       if (res.statusCode == 200) {
         var resBodyOfLogin = jsonDecode(res.body);
         if (resBodyOfLogin['success'] == true) {
-          Fluttertoast.showToast(msg: "Login successfully");
+          Fluttertoast.showToast(msg: "Đăng nhập thành công");
           setState(() {
             accountController.clear();
             passwordController.clear();
           });
 
-          User userInfo = User.fromJson(resBodyOfLogin["userData"]);
+          User userInfo = User.fromJson(resBodyOfLogin["studentData"]);
 
-          //Save user info to local storage using Shared Prefrences
+          //Save user info to local storage using Shared Preferences
           await RememberUserPrefs.storeUserInfo(userInfo);
 
-          Future.delayed(Duration(milliseconds: 2000), () {
+          Future.delayed(const Duration(milliseconds: 2000), () {
             Get.to(OverViewAppScreen());
           });
         } else {
           Fluttertoast.showToast(
-              msg: "Incorrect username or password.\n Please try again!");
+              msg:
+                  "Tài khoản hoặc mật khẩu không chính xác.\n Vui lòng thử lại!");
         }
       }
     } catch (errorMsg) {
@@ -76,241 +74,200 @@ class _LoginScreenState extends State<LoginScreen> {
                   //login screen header
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    height: 285,
+                    height: 320,
                     child: Image.asset(
-                      "images/login.png",
+                      "images/eduLogoNoName.png",
                     ),
                   ),
 
-                  //login screeen sign in form
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 168, 210, 198),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(60),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 8,
-                            color: Colors.black26,
-                            offset: Offset(0, -3),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 126, 144, 245),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 8,
+                                color: Colors.black26,
+                                offset: Offset(0, -3),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(30, 30, 30, 8),
-                        child: Column(
-                          children: [
-                            //account
-                            Form(
-                              key: formKey,
-                              child: Column(
-                                children: [
-                                  //account
-                                  TextFormField(
-                                    controller: accountController,
-                                    validator: (val) => val == ""
-                                        ? "Please write UserName"
-                                        : null,
-                                    decoration: InputDecoration(
-                                      prefixIcon: const Icon(
-                                        Icons.people,
-                                        color: Colors.black,
-                                      ),
-                                      hintText: "UserName....",
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                        borderSide: const BorderSide(
-                                          color: Colors.white60,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 30, 30, 8),
+                            child: Column(
+                              children: [
+                                Form(
+                                  key: formKey,
+                                  child: Column(
+                                    children: [
+                                      TextFormField(
+                                        controller: accountController,
+                                        validator: (val) => val == ""
+                                            ? "Vui lòng điền tài khoản"
+                                            : null,
+                                        decoration: const InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons.email,
+                                            color: Colors.black,
+                                          ),
+                                          hintText: "Email....",
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white60,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white60,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white60,
+                                            ),
+                                          ),
+                                          disabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white60,
+                                            ),
+                                          ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                            vertical: 6,
+                                          ),
+                                          fillColor: Colors.white,
+                                          filled: true,
                                         ),
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                        borderSide: const BorderSide(
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                        borderSide: const BorderSide(
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                        borderSide: const BorderSide(
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        horizontal: 14,
-                                        vertical: 6,
-                                      ),
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                    ),
-                                  ),
 
-                                  const SizedBox(
-                                    height: 18,
-                                  ),
+                                      const SizedBox(
+                                        height: 18,
+                                      ),
 
-                                  //password
-                                  Obx(
-                                    () => TextFormField(
-                                      controller: passwordController,
-                                      obscureText: isObsecure.value,
-                                      validator: (val) => val == ""
-                                          ? "Please write password"
-                                          : null,
-                                      decoration: InputDecoration(
-                                        prefixIcon: const Icon(
-                                          Icons.key,
-                                          color: Colors.black,
-                                        ),
-                                        suffixIcon: Obx(() => GestureDetector(
-                                              onTap: () {
-                                                isObsecure.value =
-                                                    !isObsecure.value;
-                                              },
-                                              child: Icon(
-                                                isObsecure.value
-                                                    ? Icons.visibility_off
-                                                    : Icons.visibility,
-                                                color: Colors.black,
+                                      //password
+                                      Obx(
+                                        () => TextFormField(
+                                          controller: passwordController,
+                                          obscureText: isObsecure.value,
+                                          validator: (val) => val == ""
+                                              ? "Vui lòng điền mật khẩu"
+                                              : null,
+                                          decoration: InputDecoration(
+                                            prefixIcon: const Icon(
+                                              Icons.key,
+                                              color: Colors.black,
+                                            ),
+                                            suffixIcon:
+                                                Obx(() => GestureDetector(
+                                                      onTap: () {
+                                                        isObsecure.value =
+                                                            !isObsecure.value;
+                                                      },
+                                                      child: Icon(
+                                                        isObsecure.value
+                                                            ? Icons
+                                                                .visibility_off
+                                                            : Icons.visibility,
+                                                        color: Colors.black,
+                                                      ),
+                                                    )),
+                                            hintText: "Mật khẩu....",
+                                            border: const OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.white60,
                                               ),
-                                            )),
-                                        hintText: "Password....",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.white60,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.white60,
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.white60,
-                                          ),
-                                        ),
-                                        disabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.white60,
-                                          ),
-                                        ),
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 14,
-                                          vertical: 6,
-                                        ),
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                      ),
-                                    ),
-                                  ),
-
-                                  //khoang cach
-                                  const SizedBox(
-                                    height: 18,
-                                  ),
-
-                                  //button
-                                  Material(
-                                    color:
-                                        const Color.fromARGB(255, 51, 156, 126),
-                                    borderRadius: BorderRadius.circular(30),
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (formKey.currentState!.validate()) {
-                                          loginUserNow();
-                                        }
-                                      },
-                                      borderRadius: BorderRadius.circular(30),
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 15,
-                                          horizontal: 40,
-                                        ),
-                                        child: Text(
-                                          "Login",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
+                                            ),
+                                            enabledBorder:
+                                                const OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.white60,
+                                              ),
+                                            ),
+                                            focusedBorder:
+                                                const OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.white60,
+                                              ),
+                                            ),
+                                            disabledBorder:
+                                                const OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.white60,
+                                              ),
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 14,
+                                              vertical: 6,
+                                            ),
+                                            fillColor: Colors.white,
+                                            filled: true,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
 
-                            //button regist
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Don't have an account?"),
-                                TextButton(
-                                  onPressed: () {
-                                    Get.to(Signup_screen());
-                                  },
-                                  child: const Text(
-                                    "Register!",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+
+                                      Material(
+                                        color: const Color.fromARGB(
+                                            255, 38, 66, 194),
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (formKey.currentState!
+                                                .validate()) {
+                                              loginUserNow();
+                                            }
+                                          },
+                                          child: const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 15,
+                                              horizontal: 40,
+                                            ),
+                                            child: Text(
+                                              "Login",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 18,
+                                      ),
+                                    ],
                                   ),
-                                )
+                                ),
                               ],
                             ),
-                            const Text(
-                              "or",
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                            //admin
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Are U a doctor?"),
-                                TextButton(
-                                  onPressed: () {
-                                    Get.to(LoginScreenDo());
-                                  },
-                                  child: const Text(
-                                    "click here!",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  const Text.rich(
+                    TextSpan(
+                      text: 'Đăng nhập không được? ',
+                      style: TextStyle(fontSize: 16),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'Xem hướng dẫn tại đây',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue)),
+                        // can add more TextSpans here...
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

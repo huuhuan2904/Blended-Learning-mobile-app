@@ -18,7 +18,7 @@ Widget _buildExpDoctor(String title, IconData icon) {
   return ListTile(
     leading: Icon(
       icon,
-      color: const Color.fromARGB(255, 80, 213, 175),
+      color: const Color.fromARGB(255, 71, 96, 241),
     ),
     title: Text(title),
   );

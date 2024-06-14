@@ -1,38 +1,39 @@
 class User {
   int id;
-  String userName;
-  String useraccount;
-  String userpassword;
-  String phoneNum;
-  String email;
+  String lastName;
+  String firstName;
+  String dob;
+  String gender;
   String address;
-  User(
-    this.id,
-    this.userName,
-    this.useraccount,
-    this.userpassword,
-    this.phoneNum,
-    this.email,
-    this.address,
-  );
+  String phone;
+  String nation;
+  String email;
+  String password;
+  User(this.id, this.lastName, this.firstName, this.dob, this.gender,
+      this.address, this.phone, this.nation, this.email, this.password);
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        int.parse(json["ID"]),
-        json["userName"],
-        json["Useraccount"],
-        json["Userpassword"],
-        json["PhoneNum"],
-        json["Email"],
-        json["address"],
-      );
+      int.parse(json["id"]),
+      json["last_name"],
+      json["first_name"],
+      json["dob"],
+      json["gender"],
+      json["address"],
+      json["phone"],
+      json["nation"],
+      json["email"],
+      json["password"]);
 
   Map<String, dynamic> toJson() => {
-        'ID': id.toString(),
-        'userName': userName,
-        'Useraccount': useraccount,
-        'Userpassword': userpassword,
-        'PhoneNum': phoneNum,
-        'Email': email,
+        'id': id.toString(),
+        'last_name': lastName,
+        'first_name': firstName,
+        'dob': dob,
+        'gender': gender,
         'address': address,
+        'phone': phone,
+        'nation': nation,
+        'email': email,
+        'password': password
       };
 }

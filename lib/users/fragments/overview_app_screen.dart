@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/users/fragments/appointment_schedule.dart';
 import 'package:flutter_application_1/users/fragments/order_fragment_screen.dart';
 import 'package:flutter_application_1/users/fragments/profile_fragment_screen.dart';
 import 'package:flutter_application_1/users/quanlydangnhap/login_screen.dart';
@@ -14,7 +13,7 @@ class OverViewAppScreen extends StatelessWidget {
 
   final List<Widget> _fragmentScreens = [
     BodyOverviewScreen(),
-    AppointmentSchedule(), //lichkham
+    OrderFragmentScreen(), //lichkham
     OrderFragmentScreen(), //thong bao
     OrderFragmentScreen(), //cai dat
   ];
@@ -106,7 +105,7 @@ class OverViewAppScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            backgroundColor: const Color.fromARGB(255, 80, 213, 175),
+            backgroundColor: const Color.fromARGB(255, 71, 96, 241),
             title: const Text('Trang chủ'),
             // actions: <Widget>[
             //   IconButton(icon: Icon(Icons.settings), onPressed: () {}),
@@ -118,15 +117,17 @@ class OverViewAppScreen extends StatelessWidget {
                 Container(
                   height: 240,
                   padding: const EdgeInsets.only(top: 50),
-                  color: const Color.fromARGB(255, 80, 213, 175),
+                  color: const Color.fromARGB(255, 71, 96, 241),
                   child: Column(
                     children: [
-                      const Center(
+                      Center(
                         child: CircleAvatar(
                           radius: 60,
-                          backgroundImage: NetworkImage(
-                              'https://img6.thuthuatphanmem.vn/uploads/2022/11/18/anh-avatar-don-gian-cho-nu_081757692.jpg'),
-                          child: Align(
+                          backgroundImage: AssetImage(
+                              _currentUser.user.gender == 'Nam'
+                                  ? 'images/avatar_male.webp'
+                                  : 'images/avatar_female.webp'),
+                          child: const Align(
                             alignment: Alignment.bottomRight,
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -144,16 +145,16 @@ class OverViewAppScreen extends StatelessWidget {
                         height: 7,
                       ),
                       Text(
-                        _currentUser.user.userName,
+                        _currentUser.user.lastName,
                         style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 25,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
-                      Text(_currentUser.user.email,
+                      Text(_currentUser.user.firstName,
                           style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 25,
                               fontWeight: FontWeight.bold))
                     ],
                   ),
@@ -207,7 +208,7 @@ class OverViewAppScreen extends StatelessWidget {
               },
               showSelectedLabels: true,
               showUnselectedLabels: true,
-              selectedItemColor: Color.fromARGB(255, 29, 184, 140),
+              selectedItemColor: const Color.fromARGB(255, 71, 96, 241),
               unselectedItemColor: Colors.black,
               items: List.generate(4, (index) {
                 var navBtnProperty = _navigationButtonProperties[index];

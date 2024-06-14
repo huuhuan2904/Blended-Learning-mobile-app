@@ -2,12 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/share/styleTextFormField.dart';
+import 'package:flutter_application_1/users/fragments/edit_profile.dart';
 import 'package:flutter_application_1/users/userPreferences/current_user.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import '../../api_connection/api_connection.dart';
-import '../quanlydangnhap/login_screen.dart';
-import '../userPreferences/user_preferences.dart';
 
 class Profilefragmentsscreen extends StatefulWidget {
   @override
@@ -19,71 +17,40 @@ class _ProfilefragmentsscreenState extends State<Profilefragmentsscreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
-  String? name;
-  String? email;
-  String? phone;
+  TextEditingController nationController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String? resetPassword;
+  bool isReadOnly = true;
 
-  EditData() async {
-    var response = await http.post(
-      Uri.parse(API.editProfile),
-      body: {
-        "ID": _currentUser.user.id.toString(),
-        "userName": nameController.text,
-        "Email": emailController.text,
-        "PhoneNum": phoneController.text,
-        "address": addressController.text,
-      },
-    );
-    print(response.body);
-  }
-
-  signOutUser() async {
-    var resultRespone = await Get.dialog(AlertDialog(
-      title: const Text(
-        "Đăng xuất",
-        style: TextStyle(
-            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
-      ),
-      content: const Text("Đăng xuất để lưu thay đổi"),
-      actions: [
-        TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: const Text(
-              "Hủy",
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            )),
-        TextButton(
-            onPressed: () {
-              Get.back(result: "LoggedOut");
-            },
-            child: const Text(
-              "OK",
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ))
-      ],
-    ));
-    if (resultRespone == "LoggedOut") {
-      // remove the userdata from phone local storage
-      RememberUserPrefs.removeUserInfo().then((value) {
-        Get.off(LoginScreen());
-      });
-    }
-  }
+  // EditData() async {
+  //   var response = await http.post(
+  //     Uri.parse(API.editProfile),
+  //     body: {
+  //       "ID": _currentUser.user.id.toString(),
+  //       "userName": nameController.text,
+  //       "Email": emailController.text,
+  //       "PhoneNum": phoneController.text,
+  //       "address": addressController.text,
+  //     },
+  //   );
+  //   print(response.body);
+  // }
 
   @override
   void initState() {
-    nameController.text = _currentUser.user.userName;
-    emailController.text = _currentUser.user.email;
-    phoneController.text = _currentUser.user.phoneNum;
+    nameController.text =
+        _currentUser.user.lastName + _currentUser.user.firstName;
+    dobController.text = _currentUser.user.dob;
+    genderController.text = _currentUser.user.gender;
     addressController.text = _currentUser.user.address;
+    phoneController.text = _currentUser.user.phone;
+    nationController.text = _currentUser.user.nation;
+    emailController.text = _currentUser.user.email;
+    passwordController.text = _currentUser.user.password;
     super.initState();
   }
 
@@ -92,16 +59,17 @@ class _ProfilefragmentsscreenState extends State<Profilefragmentsscreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Thông tin cá nhân'),
-        backgroundColor: const Color.fromARGB(255, 53, 192, 153),
+        backgroundColor: Color.fromARGB(255, 71, 96, 241),
       ),
       body: Center(
           child: ListView(
         children: [
-          const Center(
+          Center(
               child: CircleAvatar(
             radius: 100,
-            backgroundImage: NetworkImage(
-                'https://img6.thuthuatphanmem.vn/uploads/2022/11/18/anh-avatar-don-gian-cho-nu_081757692.jpg'),
+            backgroundImage: AssetImage(genderController.text == 'Nam'
+                ? 'images/avatar_male.webp'
+                : 'images/avatar_female.webp'),
           )),
           const SizedBox(
             height: 20,
@@ -117,12 +85,43 @@ class _ProfilefragmentsscreenState extends State<Profilefragmentsscreen> {
                       decoration: textInputDecoration.copyWith(
                           hintText: 'Họ tên',
                           prefixIcon: const Icon(Icons.person)),
+                      readOnly: true,
                       validator: (value) =>
                           value!.isEmpty ? 'Vui lòng không để trống' : null,
                       onChanged: (val) {
-                        setState(() {
-                          name = val;
-                        });
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      controller: dobController,
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'Sinh ngày',
+                          prefixIcon: const Icon(Icons.cake)),
+                      readOnly: true,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng không để trống' : null,
+                      onChanged: (val) {
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      controller: genderController,
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'Giới tính',
+                          prefixIcon: Icon(genderController.text == 'Nam'
+                              ? Icons.male
+                              : Icons.female)),
+                      readOnly: true,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng không để trống' : null,
+                      onChanged: (val) {
+                        setState(() {});
                       },
                     ),
                     const SizedBox(
@@ -133,11 +132,38 @@ class _ProfilefragmentsscreenState extends State<Profilefragmentsscreen> {
                       decoration: textInputDecoration.copyWith(
                           hintText: 'Email',
                           prefixIcon: const Icon(Icons.email)),
+                      readOnly: true,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng không để trống' : null,
+                      onChanged: (val) {
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      controller: passwordController,
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'Mật khẩu',
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              setState(() {
+                                isReadOnly = !isReadOnly;
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => EditProfile()));
+                              });
+                            },
+                          )),
+                      obscureText: true,
+                      readOnly: true,
                       validator: (value) =>
                           value!.isEmpty ? 'Vui lòng không để trống' : null,
                       onChanged: (val) {
                         setState(() {
-                          email = val;
+                          resetPassword = val;
                         });
                       },
                     ),
@@ -149,12 +175,11 @@ class _ProfilefragmentsscreenState extends State<Profilefragmentsscreen> {
                       decoration: textInputDecoration.copyWith(
                           hintText: 'Số điện thoại',
                           prefixIcon: const Icon(Icons.phone)),
+                      readOnly: true,
                       validator: (value) =>
                           value!.isEmpty ? 'Vui lòng không để trống' : null,
                       onChanged: (val) {
-                        setState(() {
-                          phone = val;
-                        });
+                        setState(() {});
                       },
                     ),
                     const SizedBox(
@@ -165,31 +190,43 @@ class _ProfilefragmentsscreenState extends State<Profilefragmentsscreen> {
                       decoration: textInputDecoration.copyWith(
                           hintText: 'Địa chỉ',
                           prefixIcon: const Icon(Icons.home)),
+                      readOnly: true,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng không để trống' : null,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      controller: nationController,
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'Dân tộc',
+                          prefixIcon: const Icon(Icons.place)),
+                      readOnly: true,
                       validator: (value) =>
                           value!.isEmpty ? 'Vui lòng không để trống' : null,
                     ),
                     const SizedBox(
                       height: 30,
                     ),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 53, 192, 153)),
-                        onPressed: () {
-                          print(_currentUser.user.id);
-                          if (_formKey.currentState!.validate()) {
-                            EditData();
-                            signOutUser();
-                          }
-                        },
-                        child: const Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                          child: Text(
-                            'Lưu',
-                            style: TextStyle(fontSize: 25),
-                          ),
-                        ))
+                    // ElevatedButton(
+                    //     style: ElevatedButton.styleFrom(
+                    //         backgroundColor:
+                    //             const Color.fromARGB(255, 126, 144, 245)),
+                    //     onPressed: () {
+                    //       print(_currentUser.user.id);
+                    //       if (_formKey.currentState!.validate()) {
+                    //         // EditData();
+                    //       }
+                    //     },
+                    //     child: const Padding(
+                    //       padding:
+                    //           EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                    //       child: Text(
+                    //         'Lưu',
+                    //         style: TextStyle(fontSize: 25),
+                    //       ),
+                    //     ))
                   ],
                 )),
           )

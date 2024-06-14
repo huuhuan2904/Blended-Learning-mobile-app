@@ -42,6 +42,7 @@ dependencies:
   carousel_slider: ^3.0.0
   smooth_page_indicator: ^1.1.0
   flutter_masked_text2: ^0.9.1
+  flutter_calendar_week: ^3.0.2
 
 dev_dependencies:
   flutter_test:
