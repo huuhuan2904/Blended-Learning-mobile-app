@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/users/fragments/order_fragment_screen.dart';
 import 'package:flutter_application_1/users/fragments/profile_fragment_screen.dart';
 import 'package:flutter_application_1/users/quanlydangnhap/login_screen.dart';
 import 'package:flutter_application_1/users/userPreferences/current_user.dart';
@@ -13,9 +12,9 @@ class OverViewAppScreen extends StatelessWidget {
 
   final List<Widget> _fragmentScreens = [
     BodyOverviewScreen(),
-    OrderFragmentScreen(), //lichkham
-    OrderFragmentScreen(), //thong bao
-    OrderFragmentScreen(), //cai dat
+    BodyOverviewScreen(),
+    BodyOverviewScreen(),
+    BodyOverviewScreen(),
   ];
 
   final List _navigationButtonProperties = [
